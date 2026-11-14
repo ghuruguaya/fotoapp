@@ -2,7 +2,7 @@
 
 **Proyecto 2 - Programación Python Avanzada** · Tecnicatura Universitaria en Tecnologías de Programación (UPSO) · 2026
 
-**Integrantes:** Hernandez veronica - Hernandez Gabriela
+**Integrantes:** Hernandez Veronica - Hernandez Gabriela
 
 App para editar fotos y prepararlas para redes sociales. Permite:
 
