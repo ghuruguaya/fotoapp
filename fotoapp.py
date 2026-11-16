@@ -106,6 +106,9 @@ def redimensionar_para_red(ruta, red_social):
 
     Usa ImageOps.fit, que respeta la proporción: achica/agranda la foto y recorta
     lo que sobra desde el centro, en lugar de estirarla. Así la foto NO se deforma.
+    
+        Guarda el resultado en la carpeta de resultados con el nombre
+    <nombre_original>_<red_social>.jpg (ej. cohete_instagram.jpg) y lo devuelve.
     """
     if not isinstance(ruta, str) or not isinstance(red_social, str):
         raise TypeError("La ruta y la red social tienen que ser textos (str).")
@@ -121,6 +124,12 @@ def redimensionar_para_red(ruta, red_social):
     imagen_redimensionada = ImageOps.fit(imagen, tamanio)
 
     print(f"Original: {imagen.size} -> {red_social}: {imagen_redimensionada.size}")
+    nombre_original = os.path.basename(ruta.split("?")[0])      # "imagenes/cohete.jpg" -> "cohete.jpg"
+    nombre_base = os.path.splitext(nombre_original)[0]           # "cohete.jpg" -> "cohete"
+    os.makedirs(CARPETA_RESULTADOS, exist_ok=True)
+    ruta_salida = os.path.join(CARPETA_RESULTADOS, f"{nombre_base}_{clave}.jpg")
+    imagen_redimensionada.save(ruta_salida)
+    print("Imagen guardada en:", ruta_salida)
     return imagen_redimensionada
 
 
@@ -265,7 +274,7 @@ def boceto(imagen, umbral_bajo=50, umbral_alto=150, nombre_archivo="boceto.png")
 
 
 # ---------------------------------------------------------------------------
-# Función 5: menú de opciones
+# Función 5: main () con el menú de opciones
 # ---------------------------------------------------------------------------
 
 def mostrar_imagen(imagen, titulo=""):
@@ -277,8 +286,8 @@ def mostrar_imagen(imagen, titulo=""):
     plt.show()
 
 
-def menu():
-    """Menú interactivo. Obliga a cargar una imagen (opción 1) antes de editarla."""
+def main():
+    """Función principal: menú interactivo por consola. Obliga a cargar una imagen (opción 1) antes de editarla."""    
     imagen = None        # todavía no hay ninguna imagen cargada
 
     while True:
@@ -295,10 +304,6 @@ def menu():
                 ruta = input("Ruta o URL de la imagen: ").strip()
                 red = input("Red social (Youtube, Instagram, Twitter, Facebook): ").strip()
                 imagen = redimensionar_para_red(ruta, red)
-                os.makedirs(CARPETA_RESULTADOS, exist_ok=True)
-                ruta_salida = os.path.join(CARPETA_RESULTADOS, f"redimensionada_{red.lower()}.jpg")
-                imagen.save(ruta_salida)
-                print("Imagen guardada en:", ruta_salida)
                 mostrar_imagen(imagen, f"Imagen para {red}")
 
             elif opcion == "2":
@@ -341,4 +346,4 @@ def menu():
 # Este bloque solo se ejecuta si corremos "python fotoapp.py".
 # Si hacemos "import fotoapp" desde el notebook, NO se ejecuta el menú.
 if __name__ == "__main__":
-    menu()
+    main()
